@@ -23,6 +23,8 @@ body {
 
 .container {
     position: absolute;
+    background: url(../images/bg.jpg) no-repeat;
+    background-size: 100% 100%;
     width: 100%;
     height: 100%;
     display: flex;
@@ -30,9 +32,68 @@ body {
 
     .describe {
         flex: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+
+        .animation {
+            position: absolute;
+
+            img {
+                animation: rotate1 15s linear infinite;
+                width: 5rem;
+                height: 5rem;
+                display: block;
+            }
+
+            @keyframes rotate1 {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+
+        .word {
+            position: absolute;
+
+            .title {
+                color: #ffffff;
+                font-weight: 800;
+                font-size: .65625rem;
+                padding-bottom: .15625rem;
+                border-bottom: 1px solid #ffffff;
+            }
+
+            .desc {
+                font-size: .375rem;
+                color: #ffffff;
+            }
+        }
     }
 
     .function {
         flex: 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        .order,
+        .query {
+            width: 8.25rem;
+            height: 3rem;
+            border-radius: .3125rem;
+            background: #ffffff;
+        }
+
+        .order {
+            margin-bottom: .3125rem;
+        }
     }
 }

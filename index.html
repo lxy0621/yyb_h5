@@ -12,11 +12,27 @@
 
 <body>
     <div class="container">
-        <div class="describe">1</div>
-        <div class="function">3</div>
+        <div class="describe">
+            <div class="animation">
+                <img src="./images/ball.png" alt="">
+            </div>
+            <div class="word">
+                <p class="desc">Center of Telemedicine Consultation</p>
+                <p class="title">远程医疗咨询会诊中心</p>
+            </div>
+        </div>
+        <div class="function">
+            <div class="order"></div>
+            <div class="query"></div>
+        </div>
     </div>
     <script src="./js/jquery-3.3.1.min.js"></script>
     <script src="./js/flexible.js"></script>
+    <script>
+        $('.function .order').click(function () {
+            window.location.href = 'hospitalList.html'
+        })
+    </script>
 </body>
 
 </html>

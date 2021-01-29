@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/hospitalList.css">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/getData.js"></script>
+    <script src="./js/flexible.js"></script>
+    <title>云医宝预约会诊</title>
+</head>
+
+<body>
+    <header>
+        <div class="operation goBack">
+            <img src="./images/back.png" alt="">
+        </div>
+        <div class="title">预约会诊</div>
+        <div class="operation">
+            <img src="./images/find.png" alt="">
+        </div>
+    </header>
+    <div id="container">
+        <ul id="hospitalList"></ul>
+        <div class="datastate"></div>
+    </div>
+    <!-- <footer></footer> -->
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            getHospitalData();
+        });
+
+        var totalheight = 0;
+        var curpageindex = 1;
+
+
+        $(window).scroll(function () {
+
+            totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
+
+            var BASE_URL = 'https://a.ycylzx.com';
+
+            if ($(document).scrollTop() <= 0) {
+
+                $.ajax({
+                    methods: 'GET',
+                    url: BASE_URL + '/API/GetOrganList',
+                    data: {
+                        pagesize: 10,
+                        curpageindex: 1,
+                        search: '',
+                        regionid: '',
+                        nature: ''
+                    },
+                    success: function (res) {
+                        $("#hospitalList").empty();
+                        var data = res.rows
+                        $.each(data, function (i, item) {
+                            $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
+                        })
+                    }
+                })
+            }
+
+            if ($(document).height() <= totalheight) {
+
+                curpageindex++;
+
+                $.ajax({
+                    methods: 'GET',
+                    url: BASE_URL + '/API/GetOrganList',
+                    data: {
+                        pagesize: 10,
+                        curpageindex: curpageindex,
+                        search: '',
+                        regionid: '',
+                        nature: ''
+                    },
+                    success: function (res) {
+                        var data = res.rows
+                        $.each(data, function (i, item) {
+                            if (item.photo.length != 0) {
+                                $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
+                            } else {
+                                $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="./images/nopic.jpg" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
+                            }
+                        })
+                        if (res.rows.length == 0) {
+                            $('<p>暂无更多数据</p>').appendTo('.datastate');
+                        }
+                    }
+                })
+            }
+        })
+
+        $('#hospitalList').on('click', 'li', function (e) {
+            var id = e.currentTarget.id;
+            url = "hospitalDetail.html?id=" + id;
+            window.location.href = url;
+        })
+        
+        $('.goBack').click(function () {
+            history.go(-1)
+        })
+    </script>
+</body>
+
+</html>

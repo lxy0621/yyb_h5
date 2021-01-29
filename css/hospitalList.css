@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+@media screen and (min-width: 640px) {
+  html {
+    font-size: 64px !important;
+  }
+}
+@media screen and (max-width: 319px) {
+  html {
+    font-size: 32px !important;
+  }
+}
+body {
+  width: 640/64rem;
+  margin: 0 auto;
+  font-size: 16/64rem !important;
+  background-color: #eeeeee;
+}
+.line1 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1.375rem;
+  background: #53cbe0;
+  display: flex;
+}
+header .title {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 0.4375rem;
+}
+header .operation {
+  height: 1.375rem;
+  width: 1.375rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+header .operation img {
+  display: block;
+  width: 0.65625rem;
+  height: 0.65625rem;
+}
+#container {
+  padding: 1.375rem 0 0 0;
+}
+#container #hospitalList {
+  margin: 0.15625rem 0;
+  padding: 0 0.15625rem;
+  box-sizing: border-box;
+}
+#container #hospitalList .hopistal_item {
+  background-color: #ffffff;
+  border-radius: 0.15625rem;
+  margin-bottom: 0.15625rem;
+  overflow: hidden;
+  display: flex;
+}
+#container #hospitalList .hopistal_item .item_l img {
+  display: block;
+  width: 3.75rem;
+  height: 2.8125rem;
+}
+#container #hospitalList .hopistal_item .item_r {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 0.15625rem;
+  box-sizing: border-box;
+}
+#container #hospitalList .hopistal_item .item_r .name {
+  font-size: 0.4375rem;
+  font-weight: 500;
+}
+#container #hospitalList .hopistal_item .item_r .addr {
+  font-size: 0.375rem;
+  color: #888888;
+}
+#container #hospitalList .hopistal_item .item_r .label {
+  width: 100%;
+  display: flex;
+}
+#container #hospitalList .hopistal_item .item_r .label .label_item:nth-child(1) {
+  margin-right: 0.3125rem;
+}
+#container #hospitalList .hopistal_item .item_r .label .label_item {
+  width: 1.875rem;
+  height: 0.75rem;
+  background: #fcd663;
+  border-radius: 0.375rem;
+  font-size: 0.25rem;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#container .datastate {
+  width: 100%;
+  height: 0.46875rem;
+  text-align: center;
+  font-size: 0.375rem;
+  line-height: 0.46875rem;
+  overflow: hidden;
+  margin: 0.3125rem 0;
+  color: #888888;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.53125rem;
+  background: #53cbe0;
+}

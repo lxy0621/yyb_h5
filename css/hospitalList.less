@@ -1,0 +1,149 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and(min-width:640px) {
+    html {
+        font-size: 64px !important;
+    }
+}
+
+@media screen and(max-width:319px) {
+    html {
+        font-size: 32px !important;
+    }
+}
+
+body {
+    width: 640/64rem;
+    margin: 0 auto;
+    font-size: 16/64rem !important;
+    background-color: #eeeeee;
+}
+
+.line1 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1.375rem;
+    background: #53cbe0;
+    display: flex;
+
+    .title {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ffffff;
+        font-size: .4375rem;
+    }
+
+    .operation {
+        height: 1.375rem;
+        width: 1.375rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            display: block;
+            width: .65625rem;
+            height: .65625rem;
+        }
+    }
+}
+
+#container {
+
+    padding: 1.375rem 0 0 0;
+
+    #hospitalList {
+        margin: .15625rem 0;
+        padding: 0 .15625rem;
+        box-sizing: border-box;
+
+        .hopistal_item {
+            background-color: #ffffff;
+            border-radius: .15625rem;
+            margin-bottom: .15625rem;
+            overflow: hidden;
+            display: flex;
+
+            .item_l {
+                img {
+                    display: block;
+                    width: 3.75rem;
+                    height: 2.8125rem;
+                }
+            }
+
+            .item_r {
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-start;
+                flex-direction: column;
+                padding: .15625rem;
+                box-sizing: border-box;
+
+                .name {
+                    font-size: .4375rem;
+                    font-weight: 500;
+                }
+
+                .addr {
+                    font-size: .375rem;
+                    color: #888888;
+                }
+
+                .label {
+                    width: 100%;
+                    display: flex;
+
+                    .label_item:nth-child(1) {
+                        margin-right: .3125rem;
+                    }
+
+                    .label_item {
+                        width: 1.875rem;
+                        height: .75rem;
+                        background: #fcd663;
+                        border-radius: .375rem;
+                        font-size: .25rem;
+                        color: #ffffff;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+    }
+    .datastate{
+        width: 100%;
+        height: .46875rem;
+        text-align: center;
+        font-size: .375rem;
+        line-height: .46875rem;
+        overflow: hidden;
+        margin: .3125rem 0;
+        color: #888888;
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.53125rem;
+    background: #53cbe0;
+}

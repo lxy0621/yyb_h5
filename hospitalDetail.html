@@ -21,6 +21,18 @@
     </header>
     <div class="container">
         <div class="pic"></div>
+        <div class="information">
+            <p class="info_title">基本信息</p>
+            <div class="info_content"></div>
+        </div>
+        <div class="department">
+            <p class="depart_title">科室信息</p>
+            <div class="depart_content"></div>
+        </div>
+        <div class="brief">
+            <p class="brief_title">医院简介</p>
+            <div class="brief_content"></div>
+        </div>
     </div>
     <script>
 
@@ -42,6 +54,12 @@
             $(document).ready(function () {
                 getHospitalDetail(id);
             });
+            
+            $('.depart_content').on('click', '.dep_item', function (e) {
+                var id = e.currentTarget.id;
+                url = "doctorList.html?id=" + id;
+                window.location.href = url;
+            })
 
             $('.goBack').click(function () {
                 history.go(-1)

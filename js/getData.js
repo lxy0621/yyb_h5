@@ -33,9 +33,31 @@ $(function () {
                 id: id
             },
             success: function (res) {
-                console.log(res)
                 $('<span>' + res.OrganName + '</span>').appendTo('.title')
                 $('<img src="' + res.photo + '" alt="" />').appendTo('.pic');
+                $('<div>医院等级:<span>'+ res.Grade1Name + res.Grade2Name +'</span></div><div>医院类型:<span>'+ res.NatureName +'</span></div><div>分类管理类型:<span>'+ res.NatureName +'</span></div><div>机构电话:<span>'+ res.tel +'</span></div><div>隶属关系:<span>'+ res.OrdinationName +'</span></div><div>所属区域:<span>'+ res.RegionName +'</span></div><div class="addr">医院地址:<span>'+ res.addr +'</span></div>').appendTo('.info_content')
+                var department = res.Department;
+                $.each(department,function(i,item){
+                    $('<div id='+ item.id +' class="dep_item"><div>'+ item.name +'</div><img src="./images/enter.png" /></div>').appendTo('.depart_content');
+                })
+                var decodeIntro = decodeURIComponent(res.intro);
+                $('<pre>'+ decodeIntro +'</pre>').appendTo('.brief_content');
+            }
+        })
+    }
+    //获取医师列表
+    getDoctorList = function(id){
+        $.ajax({
+            methods:'GET',
+            url:BASE_URL + '/API/GetPersonList',
+            data:{
+                pagesize:10,
+                curpageindex:1,
+                Organsid:id,
+                search:''
+            },
+            success:function(res){
+                console.log(res)
             }
         })
     }

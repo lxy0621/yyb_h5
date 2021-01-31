@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/queryDetail.css">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/getData.js"></script>
+    <script src="./js/flexible.js"></script>
+    <title>预约查询</title>
+</head>
+<body>
+    <header>
+        <div class="operation goBack">
+            <img src="./images/back.png" alt="">
+        </div>
+        <div class="title">预约会诊记录详情</div>
+        <div class="operation"></div>
+    </header>
+    <div class="container">
+        <div class="container_content">
+            <div class="query_item">
+                <div class="tips">预约人：</div>
+                <div class="name"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">所在地址：</div>
+                <div class="add"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">预约时间：</div>
+                <div class="time"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">预约类型：</div>
+                <div class="type"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">证件类型：</div>
+                <div class="ctype"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">证件号码：</div>
+                <div class="idenumber"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">手机号码：</div>
+                <div class="tel"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">出生日期：</div>
+                <div class="birthday"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">性别：</div>
+                <div class="gender"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">紧急程度：</div>
+                <div class="hope"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">回复状态：</div>
+                <div class="state"></div>
+            </div>
+            <div class="query_item">
+                <div class="tips">预约专家：</div>
+                <div class="expert"></div>
+            </div>
+            <div class="query_xitem">
+                <div class="tips">预约医院：</div>
+                <div class="hospital"></div>
+            </div>
+            <div class="query_xitem">
+                <div class="tips">病情描述：</div>
+                <div class="desc"></div>
+            </div>
+            <div class="query_xitem">
+                <div class="tips">回复信息：</div>
+                <div class="message"></div>
+            </div>
+            <div class="query_xitem">
+                <div class="tips">备注信息：</div>
+                <div class="remarks"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+
+            function GetRequest() {
+                var url = location.search;
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+
+            var id = GetRequest().id;
+
+            $(document).ready(function () {
+                getQueryDetail(id);
+            });
+
+            $('.goBack').click(function () {
+                history.go(-1)
+            })
+
+        })
+    </script>
+</body>
+</html>

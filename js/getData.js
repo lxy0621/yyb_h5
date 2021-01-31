@@ -61,4 +61,78 @@ $(function () {
             }
         })
     }
+    //预约会诊列表
+    getQueyList = function(phone){
+        $.ajax({
+            methods:'GET',
+            url:BASE_URL + '/API/GetConsultationOrderList',
+            data:{
+                pagesize:10,
+                curpageindex:1,
+                phone:phone
+            },
+            success:function(res){
+                var data = res.rows;
+                $.each(data, function (i, item) {   
+                    var state = data[i].state;
+                    var type = data[i].type;
+                    var color = '';
+                    if(state == 0){
+                        var states = '未回复';
+                        color = '#ff4200';
+                    }else{
+                        var states = '已回复';
+                        color = '#00ff72';   
+                    }
+                    if(type == 1){
+                        var types = '普通预约';
+                        color = '#ff4200';
+                    }else{
+                        var types = '快速预约';
+                        color = '#00ff72';   
+                    }
+                    $('<div id="'+ item.ID +'" class="query_item"><div class="item_t"><div class="state" style="background:'+ color +'">'+ states +'</div><div class="time">'+ item.addtime +'</div></div><div class="item_m">预约医师：<span>'+ item.expertName +'<span></div><div class="item_b"><div class="type">'+ types +'</div><div class="name"><span>预约人：</span>'+ item.p_name +'</div></div></div>').appendTo('#queryList');
+                })
+            }
+        })
+    }
+    //预约会诊详情
+    getQueryDetail = function(id){
+        $.ajax({
+            methods:'GET',
+            url:BASE_URL + '/API/GetConsultationOrderById',
+            data:{
+                id:id
+            },
+            success:function(res){
+                var data = res.rows[0];
+                if(data.type == 1){
+                    var types = '普通预约'
+                }else{
+                    var types = '快速预约'
+                }
+                if(data.state == 0){
+                    var states = '未回复'
+                }else{
+                    var states = '已回复'
+                }
+                $('<span>' + data.p_name + '</span>').appendTo('.query_item .name');
+                $('<span>' + data.RegionName + '</span>').appendTo('.query_item .add');
+                $('<span>' + data.addtime + '</span>').appendTo('.query_item .time');
+                $('<span>' + types + '</span>').appendTo('.query_item .type');
+                $('<span>' + data.card_type + '</span>').appendTo('.query_item .ctype');
+                $('<span>' + data.idcard + '</span>').appendTo('.query_item .idenumber');
+                $('<span>' + data.archivesPhone + '</span>').appendTo('.query_item .tel');
+                $('<span>' + data.birthday + '</span>').appendTo('.query_item .birthday');
+                $('<span>' + data.sex + '</span>').appendTo('.query_item .gender');
+                $('<span>' + data.hospital + '</span>').appendTo('.query_xitem .hospital');
+                $('<span>' + data.expertName + '</span>').appendTo('.query_item .expert');
+                $('<span>' + data.hopeTime + '</span>').appendTo('.query_item .hope');
+                $('<span>' + data.info + '</span>').appendTo('.query_xitem .desc');
+                $('<span>' + states + '</span>').appendTo('.query_item .state');
+                $('<span>' + data.reply + '</span>').appendTo('.query_xitem .message');
+                $('<span>' + data.remarks + '</span>').appendTo('.query_xitem .remarks');
+            }
+        })
+    }
 })

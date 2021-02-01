@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/doctorDetail.css">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/getData.js"></script>
+    <script src="./js/flexible.js"></script>
+    <title>云医宝预约会诊</title>
+</head>
+
+<body>
+    <header>
+        <div class="operation goBack">
+            <img src="./images/back.png" alt="">
+        </div>
+        <div class="title">医师详情</div>
+        <div class="operation"></div>
+    </header>
+
+    <div class="container">
+        <div class="container_t">
+            <div class="avatar"></div>
+            <div class="desc"></div>
+        </div>
+        <div class="container_b">
+            <div class="title">医师简介</div>
+            <div class="professional_title">擅长</div>
+            <div id="professional"></div>
+            <div class="brief_title">简介</div>
+            <div id="brief"></div>
+        </div>
+    </div>
+
+    <div class="appointment">立即预约</div>
+    <script>
+        $(function () {
+
+            function GetRequest() {
+                var url = location.search;
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+
+            var id = GetRequest().id;
+
+
+            $(window).ready(function () {
+                getDcotorDetail(id);
+            })
+            $('.appointment').click(function (e) {
+                var id = e.currentTarget.id;
+                url = "order.html?id=" + id;
+                window.location.href = url;
+            })
+            $('.goBack').click(function () {
+                history.go(-1)
+            })
+        })
+    </script>
+</body>
+
+</html>

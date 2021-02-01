@@ -35,85 +35,98 @@ $(function () {
             success: function (res) {
                 $('<span>' + res.OrganName + '</span>').appendTo('.title')
                 $('<img src="' + res.photo + '" alt="" />').appendTo('.pic');
-                $('<div>医院等级:<span>'+ res.Grade1Name + res.Grade2Name +'</span></div><div>医院类型:<span>'+ res.NatureName +'</span></div><div>分类管理类型:<span>'+ res.NatureName +'</span></div><div>机构电话:<span>'+ res.tel +'</span></div><div>隶属关系:<span>'+ res.OrdinationName +'</span></div><div>所属区域:<span>'+ res.RegionName +'</span></div><div class="addr">医院地址:<span>'+ res.addr +'</span></div>').appendTo('.info_content')
+                $('<div>医院等级:<span>' + res.Grade1Name + res.Grade2Name + '</span></div><div>医院类型:<span>' + res.NatureName + '</span></div><div>分类管理类型:<span>' + res.NatureName + '</span></div><div>机构电话:<span>' + res.tel + '</span></div><div>隶属关系:<span>' + res.OrdinationName + '</span></div><div>所属区域:<span>' + res.RegionName + '</span></div><div class="addr">医院地址:<span>' + res.addr + '</span></div>').appendTo('.info_content')
                 var department = res.Department;
-                $.each(department,function(i,item){
-                    $('<div id='+ item.id +' class="dep_item"><div>'+ item.name +'</div><img src="./images/enter.png" /></div>').appendTo('.depart_content');
+                $.each(department, function (i, item) {
+                    $('<div id=' + item.id + ' class="dep_item"><div>' + item.name + '</div><img src="./images/enter.png" /></div>').appendTo('.depart_content');
                 })
                 var decodeIntro = decodeURIComponent(res.intro);
-                $('<pre>'+ decodeIntro +'</pre>').appendTo('.brief_content');
+                $('<pre>' + decodeIntro + '</pre>').appendTo('.brief_content');
             }
         })
     }
     //获取医师列表
-    getDoctorList = function(id){
+    getDoctorList = function (id) {
         $.ajax({
-            methods:'GET',
-            url:BASE_URL + '/API/GetPersonList',
-            data:{
-                pagesize:10,
-                curpageindex:1,
-                Organsid:id,
-                search:''
+            methods: 'GET',
+            url: BASE_URL + '/API/GetPersonList',
+            data: {
+                pagesize: 10,
+                curpageindex: 1,
+                Organsid: id,
+                search: ''
             },
-            success:function(res){
-                console.log(res)
+            success: function (res) {
+                var data = res.rows;
+                if (res.Success == true) {
+                    $.each(data, function (i, item) {
+                        var avatar = data[i].photoFile;
+                        if (avatar != '') {
+                            $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="' + avatar + '" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
+                        } else {
+                            $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="./images/nodoctor.jpg" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
+                        }
+
+                    })
+                } else {
+                    $('<span class="nodata">该科室暂无医师数据</span>').appendTo('#doctorList');
+                }
             }
         })
     }
     //预约会诊列表
-    getQueyList = function(phone){
+    getQueyList = function (phone) {
         $.ajax({
-            methods:'GET',
-            url:BASE_URL + '/API/GetConsultationOrderList',
-            data:{
-                pagesize:10,
-                curpageindex:1,
-                phone:phone
+            methods: 'GET',
+            url: BASE_URL + '/API/GetConsultationOrderList',
+            data: {
+                pagesize: 10,
+                curpageindex: 1,
+                phone: phone
             },
-            success:function(res){
+            success: function (res) {
                 var data = res.rows;
-                $.each(data, function (i, item) {   
+                $.each(data, function (i, item) {
                     var state = data[i].state;
                     var type = data[i].type;
                     var color = '';
-                    if(state == 0){
+                    if (state == 0) {
                         var states = '未回复';
                         color = '#ff4200';
-                    }else{
+                    } else {
                         var states = '已回复';
-                        color = '#00ff72';   
+                        color = '#00ff72';
                     }
-                    if(type == 1){
+                    if (type == 1) {
                         var types = '普通预约';
                         color = '#ff4200';
-                    }else{
+                    } else {
                         var types = '快速预约';
-                        color = '#00ff72';   
+                        color = '#00ff72';
                     }
-                    $('<div id="'+ item.ID +'" class="query_item"><div class="item_t"><div class="state" style="background:'+ color +'">'+ states +'</div><div class="time">'+ item.addtime +'</div></div><div class="item_m">预约医师：<span>'+ item.expertName +'<span></div><div class="item_b"><div class="type">'+ types +'</div><div class="name"><span>预约人：</span>'+ item.p_name +'</div></div></div>').appendTo('#queryList');
+                    $('<div id="' + item.ID + '" class="query_item"><div class="item_t"><div class="state" style="background:' + color + '">' + states + '</div><div class="time">' + item.addtime + '</div></div><div class="item_m">预约医师：<span>' + item.expertName + '<span></div><div class="item_b"><div class="type">' + types + '</div><div class="name"><span>预约人：</span>' + item.p_name + '</div></div></div>').appendTo('#queryList');
                 })
             }
         })
     }
     //预约会诊详情
-    getQueryDetail = function(id){
+    getQueryDetail = function (id) {
         $.ajax({
-            methods:'GET',
-            url:BASE_URL + '/API/GetConsultationOrderById',
-            data:{
-                id:id
+            methods: 'GET',
+            url: BASE_URL + '/API/GetConsultationOrderById',
+            data: {
+                id: id
             },
-            success:function(res){
+            success: function (res) {
                 var data = res.rows[0];
-                if(data.type == 1){
+                if (data.type == 1) {
                     var types = '普通预约'
-                }else{
+                } else {
                     var types = '快速预约'
                 }
-                if(data.state == 0){
+                if (data.state == 0) {
                     var states = '未回复'
-                }else{
+                } else {
                     var states = '已回复'
                 }
                 $('<span>' + data.p_name + '</span>').appendTo('.query_item .name');
@@ -132,6 +145,26 @@ $(function () {
                 $('<span>' + states + '</span>').appendTo('.query_item .state');
                 $('<span>' + data.reply + '</span>').appendTo('.query_xitem .message');
                 $('<span>' + data.remarks + '</span>').appendTo('.query_xitem .remarks');
+            }
+        })
+    }
+
+    //医师详情
+    getDcotorDetail = function (id) {
+        $.ajax({
+            methods: 'GET',
+            url: BASE_URL + '/API/GetPersonById',
+            data: {
+                id: id
+            },
+            success: function (res) {
+                $('<img src="' + res.photoFile + '" alt="" />').appendTo('.avatar');
+                $('<div class="name">' + res.Name + '<span>' + res.SexId + '</span><span>' + res.NationId + '</span></div><div class="title">' + res.ScholarId + '<span>' + res.qualificationId + '</span></div><div>职务：' + res.dutyId + '</div>').appendTo('.desc');
+                let professional = decodeURIComponent(res.professionalSkill);
+                let dutyDescribe = decodeURIComponent(res.dutyDescribe);
+                $('<span>' + professional + '</span>').appendTo('#professional');
+                $('<span>' + dutyDescribe + '</span>').appendTo('#brief');
+                $('.appointment').attr('id', res.id);
             }
         })
     }

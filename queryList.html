@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <script src="./js/flexible.js"></script>
     <title>预约查询</title>
 </head>
+
 <body>
     <header>
         <div class="operation goBack">
@@ -23,7 +25,7 @@
     </div>
 
     <script>
-        $(function(){
+        $(function () {
             function GetRequest() {
                 var url = location.search;
                 var theRequest = new Object();
@@ -40,7 +42,84 @@
             var telNumber = GetRequest().phone;
             var totalheight = 0;
             var curpageindex = 1;
-            
+
+            $(window).scroll(function () {
+
+                if ($(document).scrollTop() <= 0) {
+                    $.ajax({
+                        methods: 'GET',
+                        url: BASE_URL + '/API/GetConsultationOrderList',
+                        data: {
+                            pagesize: 10,
+                            curpageindex: 1,
+                            phone: telNumber
+                        },
+                        success: function (res) {
+                            $("#queryList").empty();
+                            var data = res.rows;
+                            $.each(data, function (i, item) {
+                                var state = data[i].state;
+                                var type = data[i].type;
+                                var color = '';
+                                if (state == 0) {
+                                    var states = '未回复';
+                                    color = '#ff4200';
+                                } else {
+                                    var states = '已回复';
+                                    color = '#00ff72';
+                                }
+                                if (type == 1) {
+                                    var types = '普通预约';
+                                    color = '#ff4200';
+                                } else {
+                                    var types = '快速预约';
+                                    color = '#00ff72';
+                                }
+                                $('<div id="' + item.ID + '" class="query_item"><div class="item_t"><div class="state" style="background:' + color + '">' + states + '</div><div class="time">' + item.addtime + '</div></div><div class="item_m">预约医师：<span>' + item.expertName + '<span></div><div class="item_b"><div class="type">' + types + '</div><div class="name"><span>预约人：</span>' + item.p_name + '</div></div></div>').appendTo('#queryList');
+                            })
+                        }
+                    })
+                }
+                if ($(document).height() <= totalheight) {
+                    curpageindex++;
+                    $.ajax({
+                        methods: 'GET',
+                        url: BASE_URL + '/API/GetConsultationOrderList',
+                        data: {
+                            pagesize: 10,
+                            curpageindex: curpageindex,
+                            phone: telNumber
+                        },
+                        success: function (res) {
+                            var data = res.rows;
+                            $.each(data, function (i, item) {
+                                var state = data[i].state;
+                                var type = data[i].type;
+                                var color = '';
+                                if (state == 0) {
+                                    var states = '未回复';
+                                    color = '#ff4200';
+                                } else {
+                                    var states = '已回复';
+                                    color = '#00ff72';
+                                }
+                                if (type == 1) {
+                                    var types = '普通预约';
+                                    color = '#ff4200';
+                                } else {
+                                    var types = '快速预约';
+                                    color = '#00ff72';
+                                }
+                                $('<div id="' + item.ID + '" class="query_item"><div class="item_t"><div class="state" style="background:' + color + '">' + states + '</div><div class="time">' + item.addtime + '</div></div><div class="item_m">预约医师：<span>' + item.expertName + '<span></div><div class="item_b"><div class="type">' + types + '</div><div class="name"><span>预约人：</span>' + item.p_name + '</div></div></div>').appendTo('#queryList');
+                            })
+                            if (res.rows.length == 0) {
+                                $('<p>暂无更多数据</p>').appendTo('.datastate');
+                            }
+                        }
+                    })
+                }
+            })
+
             $('#queryList').on('click', 'div[class="query_item"]', function (e) {
                 var id = e.currentTarget.id;
                 url = "queryDetail.html?id=" + id;
@@ -56,4 +135,5 @@
         })
     </script>
 </body>
+
 </html>

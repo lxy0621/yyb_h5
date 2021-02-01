@@ -104,6 +104,10 @@ body {
   height: 1rem;
   border-bottom: 0.015625rem solid #eeeeee;
 }
+.container .swiper-container .swiper-wrapper .swiper-slide .slide_item select option {
+  width: 1.875rem;
+  height: auto;
+}
 .container .swiper-container .swiper-wrapper .swiper-slide .slide_item .item_l {
   flex: 1;
 }

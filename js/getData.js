@@ -168,4 +168,62 @@ $(function () {
             }
         })
     }
+
+    //区域列表信息
+    getRegion = function(){
+        $.ajax({
+            methods:'GET',
+            url:BASE_URL + '/API/GetRegion',
+            data:{
+                pagesize:50,
+                curpageindex:1,
+                id:1,
+                grade:''
+            },
+            success:function(res){
+                var data = res.rows
+                $.each(data,function(i,item){
+                    $('<option value="'+ item.id +'">'+ item.name +'</option>').appendTo('.province');
+                })
+            }
+        })
+    }
+    //获取市级列表
+    get2Region = function(province,grade){
+        $.ajax({
+            methods:'GET',
+            url:BASE_URL + '/API/GetRegion',
+            data:{
+                pagesize:100,
+                curpageindex:1,
+                id:province,
+                grade:grade
+            },
+            success:function(res){
+                var data = res.rows
+                $('.city').empty();
+                $.each(data,function(i,item){
+                    $('<option value="'+ item.id +'">'+ item.name +'</option>').appendTo('.city');
+                })
+            }
+        })
+    }
+    //获取证件类型
+    getCardType = function(){
+        $.ajax({
+            methods:'GET',
+            url:BASE_URL + '/API/GetCode',
+            data:{
+                pagesize:100,
+                curpageindex:1,
+                type:"证件类型"
+            },
+            success:function(res){
+                var data = res.rows;
+                $.each(data,function(i,item){
+                    $('<option value="'+ item.id +'">'+ item.name +'</option>').appendTo('.ctype');
+                })
+            }
+        })
+    }
 })

@@ -35,19 +35,11 @@
                 <div class="swiper-slide">
                     <div class="slide_item">
                         <div class="item_l">所在省份：</div>
-                        <select name="province" class="item_r">
-                            <option value="内蒙古">内蒙古</option>
-                            <option value="北京">北京</option>
-                            <option value="天津">天津</option>
-                        </select>
+                        <select name="province" class="item_r province"></select>
                     </div>
                     <div class="slide_item">
                         <div class="item_l">所在城市：</div>
-                        <select name="city" class="item_r">
-                            <option value="呼和浩特">呼和浩特</option>
-                            <option value="乌兰察布">乌兰察布</option>
-                            <option value="包头">包头</option>
-                        </select>
+                        <select name="city" class="item_r city"></select>
                     </div>
                     <div class="slide_item">
                         <div class="item_l">姓名：</div>
@@ -55,21 +47,18 @@
                     </div>
                     <div class="slide_item">
                         <div class="item_l">出生日期：</div>
-                        <input name="birthday" type="text" class="item_r" placeholder="请输入出生日期">
+                        <input name="birthday" type="text" class="item_r" placeholder="请输入出生日期(例：1990-01-01)">
                     </div>
                     <div class="slide_item">
                         <div class="item_l">性别：</div>
-                        <select name="gender" class="item_r">
+                        <select name="gender" class="item_r gender">
                             <option value="男">男</option>
                             <option value="女">女</option>
                         </select>
                     </div>
                     <div class="slide_item">
                         <div class="item_l">证件类型：</div>
-                        <select name="ctype" class="item_r">
-                            <option value="身份证">身份证</option>
-                            <option value="军官证">军官证</option>
-                        </select>
+                        <select name="ctype" class="item_r ctype"></select>
                     </div>
                     <div class="slide_item">
                         <div class="item_l">证件号码：</div>
@@ -145,6 +134,42 @@
             }
 
             var id = GetRequest().id;
+            var province = '601b7896-cde0-438a-b214-0113679374de';  //默认省份
+            var grade = 4;
+            var gender = '男';
+            var ctype = 'a9bdf949-488c-4172-a398-1690e31f7e1d';
+            $(document).ready(function(){
+                getRegion();
+                get2Region(province,grade);
+                getCardType();
+            })
+            
+            $('.province').change(function () {
+                province = ($(".province option:selected").val());
+                if(province == '601b7896-cde0-438a-b214-0113679374de' || province == 'a5488c8c-e6bd-4225-b54f-8cec93e4339e' || province == 'de3d3c18-cfc5-4b61-a701-41e0a455f892' || province == '6b3e1f67-099c-461d-b315-b26b8a78a602' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == '94582429-c27a-4ad0-9725-1483ad6c984f' || province == '6708aae8-173d-4004-af91-e81d04155232'){
+                    var grade = 4;
+                    get2Region(province,grade);
+                }else{
+                    var grade = '';
+                    get2Region(province,grade);
+                }
+            })
+            $('.gender').change(function(){
+                gender = ($(".gender option:selected").val());
+            })
+            $('.ctype').change(function(){
+                ctype = ($(".ctype option:selected").val());
+            })
+            $('.quickBtn').click(function(){
+                var expertId = id;
+                var regionid = $('.province option:first').text() +','+ $('.city option:first').text();
+                var p_name = $('input[name = "name"]').val();
+                var birthday = $('input[name = "birthday"]').val();
+                var sex = gender;
+                var card_type = ctype;
+                var idcard = $('input[name = "cnumber"]').val()
+                console.log(id,regionid,p_name,birthday,sex,card_type,idcard);
+            })
 
             $('.goBack').click(function () {
                 history.go(-1)

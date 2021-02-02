@@ -85,6 +85,7 @@ $(function () {
                 phone: phone
             },
             success: function (res) {
+
                 var data = res.rows;
                 $.each(data, function (i, item) {
                     var state = data[i].state;
@@ -99,10 +100,8 @@ $(function () {
                     }
                     if (type == 1) {
                         var types = '普通预约';
-                        color = '#ff4200';
                     } else {
                         var types = '快速预约';
-                        color = '#00ff72';
                     }
                     $('<div id="' + item.ID + '" class="query_item"><div class="item_t"><div class="state" style="background:' + color + '">' + states + '</div><div class="time">' + item.addtime + '</div></div><div class="item_m">预约医师：<span>' + item.expertName + '<span></div><div class="item_b"><div class="type">' + types + '</div><div class="name"><span>预约人：</span>' + item.p_name + '</div></div></div>').appendTo('#queryList');
                 })

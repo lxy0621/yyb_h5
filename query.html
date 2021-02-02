@@ -67,6 +67,7 @@
                                 }
                             }, 1000);                  
                         }else{
+                            $('.tips').empty();
                             $('<span>验证码发送失败</span>').appendTo('.tips');
                             $('.tips').css('display','block');
                             setTimeout(function(){

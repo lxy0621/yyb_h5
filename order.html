@@ -34,22 +34,27 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <div class="slide_item">
+                        <div class="red">*</div>
                         <div class="item_l">所在省份：</div>
                         <select name="province" class="item_r province"></select>
                     </div>
                     <div class="slide_item">
+                        <div class="red">*</div>
                         <div class="item_l">所在城市：</div>
                         <select name="city" class="item_r city"></select>
                     </div>
                     <div class="slide_item">
+                        <div class="red">*</div>
                         <div class="item_l">姓名：</div>
                         <input name="name" type="text" class="item_r" placeholder="请输入姓名">
                     </div>
                     <div class="slide_item">
+                        <div class="red"></div>
                         <div class="item_l">出生日期：</div>
                         <input name="birthday" type="text" class="item_r" placeholder="请输入出生日期(例：1990-01-01)">
                     </div>
                     <div class="slide_item">
+                        <div class="red"></div>
                         <div class="item_l">性别：</div>
                         <select name="gender" class="item_r gender">
                             <option value="男">男</option>
@@ -57,18 +62,22 @@
                         </select>
                     </div>
                     <div class="slide_item">
+                        <div class="red"></div>
                         <div class="item_l">证件类型：</div>
                         <select name="ctype" class="item_r ctype"></select>
                     </div>
                     <div class="slide_item">
+                        <div class="red"></div>
                         <div class="item_l">证件号码：</div>
                         <input name="cnumber" type="text" class="item_r" placeholder="请输入证件号码">
                     </div>
                     <div class="slide_item">
+                        <div class="red">*</div>
                         <div class="item_l">手机号码：</div>
-                        <input name="tel" type="text" class="item_r" placeholder="请输入手机号码">
+                        <input name="tel" type="text" class="item_r TEL" placeholder="请输入手机号码">
                     </div>
                     <div class="slide_item">
+                        <div class="red"></div>
                         <div class="item_l">验证码：</div>
                         <div class="item_r item_code">
                             <input class="code" name="code" type="text" placeholder="请输入验证码">
@@ -76,8 +85,43 @@
                         </div>
                     </div>
                     <div class="slide_item">
+                        <div class="red">*</div>
                         <div class="item_l">紧急程度：</div>
-                        <select name="hopeTime" class="item_r">
+                        <select name="hopeTime" class="item_r hopetime">
+                            <option value="越快越好">越快越好</option>
+                            <option value="一周内">一周内</option>
+                            <option value="一个月内">一个月内</option>
+                        </select>
+                    </div>
+                    <div class="slide_xitem">
+                        <div class="red"></div>
+                        <div class="item_l">病情描述：</div>
+                        <textarea name="desc" class="desc"></textarea>
+                    </div>
+
+
+                    <div class="quickBtn">普通预约</div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide_item">
+                        <div class="item_l">所在省份：</div>
+                        <select name="province2" class="item_r province2"></select>
+                    </div>
+                    <div class="slide_item">
+                        <div class="item_l">所在城市：</div>
+                        <select name="city2" class="item_r city2"></select>
+                    </div>
+                    <div class="slide_item">
+                        <div class="item_l">联系人：</div>
+                        <input name="name2" type="text" class="item_r" placeholder="请输入姓名">
+                    </div>
+                    <div class="slide_item">
+                        <div class="item_l">手机号码：</div>
+                        <input name="tel2" type="text" class="item_r TEL2" placeholder="请输入手机号码">
+                    </div>
+                    <div class="slide_item">
+                        <div class="item_l">紧急程度：</div>
+                        <select name="hopeTime2" class="item_r hopetime2">
                             <option value="越快越好">越快越好</option>
                             <option value="一周内">一周内</option>
                             <option value="一个月内">一个月内</option>
@@ -85,15 +129,13 @@
                     </div>
                     <div class="slide_xitem">
                         <div class="item_l">病情描述：</div>
-                        <textarea name="desc" class="desc"></textarea>
+                        <textarea name="desc2" class="desc2"></textarea>
                     </div>
-
-                    
-                    <div class="quickBtn">快速预约</div>
+                    <div class="quickBtn2">快速预约</div>
                 </div>
-                <div class="swiper-slide">2</div>
             </div>
         </div>
+        <div class="tips"></div>
     </div>
 
     <script>
@@ -132,43 +174,199 @@
                 }
                 return theRequest;
             }
+            var BASE_URL = 'https://a.ycylzx.com';
 
             var id = GetRequest().id;
             var province = '601b7896-cde0-438a-b214-0113679374de';  //默认省份
             var grade = 4;
             var gender = '男';
             var ctype = 'a9bdf949-488c-4172-a398-1690e31f7e1d';
-            $(document).ready(function(){
+            var hopetime = '越快越好';
+            var TEL = '';
+            var realTEL = '';
+            var CODE = '';  //用户得到的验证码
+
+            $(document).ready(function () {
                 getRegion();
-                get2Region(province,grade);
+                get2Region2(province, grade);
+                get2Region(province, grade);
                 getCardType();
             })
-            
+
             $('.province').change(function () {
                 province = ($(".province option:selected").val());
-                if(province == '601b7896-cde0-438a-b214-0113679374de' || province == 'a5488c8c-e6bd-4225-b54f-8cec93e4339e' || province == 'de3d3c18-cfc5-4b61-a701-41e0a455f892' || province == '6b3e1f67-099c-461d-b315-b26b8a78a602' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == '94582429-c27a-4ad0-9725-1483ad6c984f' || province == '6708aae8-173d-4004-af91-e81d04155232'){
+                if (province == '601b7896-cde0-438a-b214-0113679374de' || province == 'a5488c8c-e6bd-4225-b54f-8cec93e4339e' || province == 'de3d3c18-cfc5-4b61-a701-41e0a455f892' || province == '6b3e1f67-099c-461d-b315-b26b8a78a602' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == '94582429-c27a-4ad0-9725-1483ad6c984f' || province == '6708aae8-173d-4004-af91-e81d04155232') {
                     var grade = 4;
-                    get2Region(province,grade);
-                }else{
+                    get2Region(province, grade);
+                } else {
                     var grade = '';
-                    get2Region(province,grade);
+                    get2Region(province, grade);
                 }
             })
-            $('.gender').change(function(){
+            $('.gender').change(function () {
                 gender = ($(".gender option:selected").val());
             })
-            $('.ctype').change(function(){
+            $('.ctype').change(function () {
                 ctype = ($(".ctype option:selected").val());
             })
-            $('.quickBtn').click(function(){
+            $('.hopetime').change(function () {
+                hopetime = ($(".hopetime option:selected").val());
+            })
+
+            //手机验证码
+            $('.TEL').blur(function () {
+                TEL = $('input[name = "tel"]').val();
+            })
+            $('.code').blur(function () {
+                var CODING = $('input[name = "code"]').val();
+                if (CODE == CODING) {
+                    $('.tips').empty();
+                    $('<span>验证码核验成功</span>').appendTo('.tips');
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000);
+                    realTEL = TEL;
+                } else {
+                    $('.tips').empty();
+                    $('<span>验证码输入错误</span>').appendTo('.tips');
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000)
+                }
+            })
+            $('.codeBtn').click(function () {
+                $.ajax({
+                    methods: 'GET',
+                    url: BASE_URL + '/API/SMS',
+                    data: {
+                        phone: TEL
+                    },
+                    success: function (res) {
+                        if (res.Success == true) {
+                            CODE = res.zym;
+                            var times = 60;
+                            $('.codeBtn').empty();
+                            countDown = setInterval(() => {
+                                times--;
+                                $('.codeBtn').empty();
+                                $('<span>重新发送' + times + 's</span>').appendTo('.codeBtn');
+                                if (times <= 0) {
+                                    $('.codeBtn').empty();
+                                    clearInterval(countDown);
+                                    $('<span>获取验证码</span>').appendTo('.codeBtn');
+                                }
+                            }, 1000);
+                        } else {
+                            $('.tips').empty();
+                            $('<span>验证码发送失败</span>').appendTo('.tips');
+                            $('.tips').css('display', 'block');
+                            setTimeout(function () {
+                                $('.tips').css('display', 'none');
+                            }, 2000)
+                        }
+                    }
+                })
+            })
+            //手机验证END
+
+            $('.quickBtn').click(function () {
                 var expertId = id;
-                var regionid = $('.province option:first').text() +','+ $('.city option:first').text();
+                var type = 1;
+                var regionid = $('.province option:first').text() + ',' + $('.city option:first').text();
                 var p_name = $('input[name = "name"]').val();
                 var birthday = $('input[name = "birthday"]').val();
                 var sex = gender;
                 var card_type = ctype;
-                var idcard = $('input[name = "cnumber"]').val()
-                console.log(id,regionid,p_name,birthday,sex,card_type,idcard);
+                var idcard = $('input[name = "cnumber"]').val();
+                var hopeTime = hopetime;
+                var archivesPhone = realTEL;
+                var info = $('.desc').val();
+                // console.log(id, regionid, p_name, birthday, sex, card_type, idcard, hopeTime, archivesPhone, info);
+
+                if (regionid.length == 0 || p_name.length == 0 || archivesPhone.length == 0 || hopeTime.length == 0) {
+                    $('.tips').empty();
+                    $('<span>缺少必填参数</span>').appendTo('.tips');
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000)
+                } else {
+                    getOrder(expertId, type, regionid, p_name, birthday, sex, card_type, idcard, hopeTime, archivesPhone, info)
+                }
+            })
+
+            //快速预约
+            $('.province2').change(function () {
+                province = ($(".province2 option:selected").val());
+                if (province == '601b7896-cde0-438a-b214-0113679374de' || province == 'a5488c8c-e6bd-4225-b54f-8cec93e4339e' || province == 'de3d3c18-cfc5-4b61-a701-41e0a455f892' || province == '6b3e1f67-099c-461d-b315-b26b8a78a602' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == 'b571a915-dc1c-4ca2-a271-c81330aeab14' || province == '94582429-c27a-4ad0-9725-1483ad6c984f' || province == '6708aae8-173d-4004-af91-e81d04155232') {
+                    $.ajax({
+                        methods: 'GET',
+                        url: BASE_URL + '/API/GetRegion',
+                        data: {
+                            pagesize: 100,
+                            curpageindex: 1,
+                            id: province,
+                            grade: 4
+                        },
+                        success: function (res) {
+                            var data = res.rows
+                            $('.city2').empty();
+                            $.each(data, function (i, item) {
+                                $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.city2');
+                            })
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        methods: 'GET',
+                        url: BASE_URL + '/API/GetRegion',
+                        data: {
+                            pagesize: 100,
+                            curpageindex: 1,
+                            id: province,
+                            grade: ''
+                        },
+                        success: function (res) {
+                            var data = res.rows
+                            $('.city2').empty();
+                            $.each(data, function (i, item) {
+                                $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.city2');
+                            })
+                        }
+                    });
+                }
+            })
+
+            $('.hopetime2').change(function () {
+                hopetime = ($(".hopetime2 option:selected").val());
+            })
+
+            $('.quickBtn2').click(function () {
+                var expertId = id;
+                var type = 2;
+                var regionid = $('.province2 option:first').text() + ',' + $('.city2 option:first').text();
+                var p_name = $('input[name = "name2"]').val();
+                var hopeTime = hopetime;
+                var archivesPhone = $('input[name = "tel2"]').val();;
+                var info = $('.desc2').val();
+                var birthday = '';
+                var sex = '';
+                var card_type = '';
+                var idcard = '';
+                // console.log(expertId, type, regionid, p_name, hopeTime, archivesPhone, info)
+                if (regionid.length == 0 || p_name.length == 0 || archivesPhone.length == 0 || hopeTime.length == 0) {
+                    $('.tips').empty();
+                    $('<span>缺少必填参数</span>').appendTo('.tips');
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000)
+                } else {
+                    getOrder(expertId, type, regionid, p_name, birthday, sex, card_type, idcard, hopeTime, archivesPhone, info)
+                }
+
             })
 
             $('.goBack').click(function () {

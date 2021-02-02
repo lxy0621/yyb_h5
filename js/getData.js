@@ -170,59 +170,121 @@ $(function () {
     }
 
     //区域列表信息
-    getRegion = function(){
+    getRegion = function () {
         $.ajax({
-            methods:'GET',
-            url:BASE_URL + '/API/GetRegion',
-            data:{
-                pagesize:50,
-                curpageindex:1,
-                id:1,
-                grade:''
+            methods: 'GET',
+            url: BASE_URL + '/API/GetRegion',
+            data: {
+                pagesize: 50,
+                curpageindex: 1,
+                id: 1,
+                grade: ''
             },
-            success:function(res){
+            success: function (res) {
                 var data = res.rows
-                $.each(data,function(i,item){
-                    $('<option value="'+ item.id +'">'+ item.name +'</option>').appendTo('.province');
+                $.each(data, function (i, item) {
+                    $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.province');
+                    $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.province2');
                 })
             }
         })
     }
     //获取市级列表
-    get2Region = function(province,grade){
+    get2Region = function (province, grade) {
         $.ajax({
-            methods:'GET',
-            url:BASE_URL + '/API/GetRegion',
-            data:{
-                pagesize:100,
-                curpageindex:1,
-                id:province,
-                grade:grade
+            methods: 'GET',
+            url: BASE_URL + '/API/GetRegion',
+            data: {
+                pagesize: 100,
+                curpageindex: 1,
+                id: province,
+                grade: grade
             },
-            success:function(res){
+            success: function (res) {
                 var data = res.rows
                 $('.city').empty();
-                $.each(data,function(i,item){
-                    $('<option value="'+ item.id +'">'+ item.name +'</option>').appendTo('.city');
+                $.each(data, function (i, item) {
+                    $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.city');
+                })
+            }
+        })
+    }
+    //获取市级列表2
+    get2Region2 = function (province, grade) {
+        $.ajax({
+            methods: 'GET',
+            url: BASE_URL + '/API/GetRegion',
+            data: {
+                pagesize: 100,
+                curpageindex: 1,
+                id: province,
+                grade: grade
+            },
+            success: function (res) {
+                var data = res.rows
+                $('.city2').empty();
+                $.each(data, function (i, item) {
+                    $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.city2');
                 })
             }
         })
     }
     //获取证件类型
-    getCardType = function(){
+    getCardType = function () {
         $.ajax({
-            methods:'GET',
-            url:BASE_URL + '/API/GetCode',
-            data:{
-                pagesize:100,
-                curpageindex:1,
-                type:"证件类型"
+            methods: 'GET',
+            url: BASE_URL + '/API/GetCode',
+            data: {
+                pagesize: 100,
+                curpageindex: 1,
+                type: "证件类型"
             },
-            success:function(res){
+            success: function (res) {
                 var data = res.rows;
-                $.each(data,function(i,item){
-                    $('<option value="'+ item.id +'">'+ item.name +'</option>').appendTo('.ctype');
+                $.each(data, function (i, item) {
+                    $('<option value="' + item.id + '">' + item.name + '</option>').appendTo('.ctype');
                 })
+            }
+        })
+    }
+    //预约接口
+    getOrder = function (expertId, type, regionid, p_name, birthday, sex, card_type, idcard, hopeTime, archivesPhone, info) {
+        $.ajax({
+            methods: 'GET',
+            url: BASE_URL + '/API/AddConsultationOrder',
+            data: {
+                expertId: expertId,
+                type: type,
+                regionid: regionid,
+                p_name: p_name,
+                archivesPhone: archivesPhone,
+                hopeTime: hopeTime,
+                info: info,
+                birthday: birthday,
+                sex: sex,
+                card_type: card_type,
+                idcard: idcard,
+                ip: ''
+            },
+            success: function (res) {
+                if (res.Success = true) {
+                    $('.tips').empty();
+                    $('<span>预约成功!</span>').appendTo('.tips');
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000)
+                    setTimeout(function () {
+                        history.go(-1);
+                    }, 2000)
+                } else {
+                    $('.tips').empty();
+                    $('<span>' + res.Message + '</span>').appendTo('.tips');
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000)
+                }
             }
         })
     }

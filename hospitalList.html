@@ -16,87 +16,98 @@
         <div class="operation goBack">
             <img src="./images/back.png" alt="">
         </div>
-        <div class="title">预约会诊</div>
-        <div class="operation">
-            <img src="./images/find.png" alt="">
-        </div>
+        <div class="title">选择医院</div>
+        <div class="title changeTab">选择医生</div>
     </header>
-    <div id="search">
-        <input class="name" type="text" name="name" placeholder="请输入医院名称">
-        <select class="city">
-            <option value="" style="display: none;">请选择医院所在城市</option>
-            <option value="内蒙古">内蒙古</option>
-            <option value="北京">北京</option>
-            <option value="天津">天津</option>
-            <option value="上海">上海</option>
-            <option value="重庆">重庆</option>
-            <option value="河北">河北</option>
-            <option value="河南">河南</option>
-            <option value="云南">云南</option>
-            <option value="辽宁">辽宁</option>
-            <option value="黑龙江">黑龙江</option>
-            <option value="湖南">湖南</option>
-            <option value="安徽">安徽</option>
-            <option value="山东">山东</option>
-            <option value="新疆">新疆</option>
-            <option value="江苏">江苏</option>
-            <option value="浙江">浙江</option>
-            <option value="江西">江西</option>
-            <option value="湖北">湖北</option>
-            <option value="广西">广西</option>
-            <option value="甘肃">甘肃</option>
-            <option value="山西">山西</option>
-            <option value="陕西">陕西</option>
-            <option value="吉林">吉林</option>
-            <option value="福建">福建</option>
-            <option value="贵州">贵州</option>
-            <option value="广东">广东</option>
-            <option value="青海">青海</option>
-            <option value="西藏">西藏</option>
-            <option value="四川">四川</option>
-            <option value="宁夏">宁夏</option>
-            <option value="海南">海南</option>
-            <option value="台湾">台湾</option>
-            <option value="香港">香港</option>
-            <option value="澳门">澳门</option>
-        </select>
-        <select class="type">
-            <option value="" style="display: none;">请选择医院类型</option>
-            <option value="综合医院">综合医院</option>
-            <option value="专科医院">专科医院</option>
-        </select>
-        <button id="searchBtn">搜索</button>
-    </div>
+
     <div id="container">
+        <div id="search">
+            <input class="name" type="text" name="name" placeholder="请输入医院名称">
+            <div class="btnSet">
+                <button id="reset">
+                    <img src="./images/reset.png" alt="">
+                </button>
+                <button id="searchBtn">
+                    <img src="./images/find.png" alt="">
+                </button>
+            </div>
+        </div>
+        <div id="dropDown">
+            <div class="hos_position"><span>所在地筛选</span> <img src="./images/drop.png" alt=""></div>
+            <div class="hos_type"><span>类型筛选</span> <img src="./images/drop.png" alt=""></div>
+        </div>
         <ul id="hospitalList"></ul>
+        <div id="position">
+            <ul></ul>
+        </div>
+        <div id="type">
+            <ul></ul>
+        </div>
+        <div class="cover"></div>
+        <div class="cover1"></div>
         <div class="datastate"></div>
     </div>
     <!-- <footer></footer> -->
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            getHospitalData();
-        });
-
         var totalheight = 0;
         var curpageindex = 1;
         var BASE_URL = 'https://a.ycylzx.com';
 
-        // 搜索
-        $('.operation').click(function () {
-            $('#search').slideToggle(300);
+        $(document).ready(function () {
+            getHospitalData('', '', '', '', curpageindex);
+        });
+
+        // 搜索医院
+        $('.hos_position').click(function () {
+            $('#type').slideUp(300);
+            $('#position').slideToggle(300);
+            $('.cover').slideToggle(0);
+            $('.cover1').slideUp(0);
+        })
+        $('.hos_type').click(function () {
+            $('#position').slideUp(300);
+            $('#type').slideToggle(300);
+            $('.cover1').slideToggle(0);
+            $('.cover').slideUp(0)
+        })
+
+        $('.cover').click(function () {
+            $('#position').slideUp(300);
+            $('.cover').slideUp(0);
+        })
+        $('.cover1').click(function () {
+            $('#type').slideUp(300);
+            $('.cover1').slideUp(0);
         })
 
         search_name = '';   //搜索名称
         search_city = '';   //搜索省份
         search_type = '';   //搜索类型
 
+        $('.changeTab').click(function () {
+            url = "quickSearch.html";
+            window.location.href = url;
+        })
+
         $('.name').blur(function () {
             search_name = $('input[name = "name"]').val();
         })
-        $('.city').change(function () {
-            search_city = ($(".city option:selected").text());
+
+        //下拉筛选
+        $('#position ul').on('click', 'li', function (e) {
+            search_city = e.currentTarget.textContent;
+            getHospitalData(search_name, search_city, search_type, '#hospitalList', curpageindex);
+            $('.hos_position span').empty();
+            $('.hos_position span').text(e.currentTarget.textContent);
+        })
+
+        $('#type ul').on('click', 'li', function (e) {
+            search_type = e.currentTarget.textContent;
+            getHospitalData(search_name, search_city, search_type, '#hospitalList', curpageindex);
+            $('.type span').empty();
+            $('.hos_type span').text(e.currentTarget.textContent);
         })
 
         $('.type').change(function () {
@@ -105,91 +116,66 @@
 
         $('#searchBtn').click(function () {
 
-            $.ajax({
-                methods: 'GET',
-                url: BASE_URL + '/API/GetOrganList',
-                data: {
-                    pagesize: 50,
-                    curpageindex: curpageindex,
-                    search: search_name,
-                    regionid: search_city,
-                    nature: search_type
-                },
-                success: function (res) {
-                    $("#hospitalList").empty();  
-                    $('#search').slideUp(300);
-                    var data = res.rows
-                    if (res.Success == false) {
-                        $('<p>未找到对应的医院</p>').appendTo('.datastate');
-                    }
-                    $.each(data, function (i, item) {
-                        $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
-                    })
-                    $('.name').val('');
-                    $('.city').val('');
-                    $('.type').val('');
-                    search_name = '';
-                    search_city = '';
-                    search_type = '';
-                }
-            })
+            getHospitalData(search_name, search_city, search_type, '#hospitalList', curpageindex);
 
         })
 
-        $(window).scroll(function () {
+        $('#reset').click(function () {
+
+            search_name = '';
+            search_city = '';
+            search_type = '';
+            $('.name').val('');
+            $('.hos_position span').text('所在地筛选');
+            $('.hos_type span').text('类型筛选');
+
+            getHospitalData(search_name, search_city, search_type, '#hospitalList', curpageindex);
+
+        })
+
+        $(window).scroll(function (e) {
+
+            e.preventDefault();
 
             totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
 
             if ($(document).scrollTop() <= 0) {
 
-                $.ajax({
-                    methods: 'GET',
-                    url: BASE_URL + '/API/GetOrganList',
-                    data: {
-                        pagesize: 10,
-                        curpageindex: 1,
-                        search: '',
-                        regionid: '',
-                        nature: ''
-                    },
-                    success: function (res) {
-                        $("#hospitalList").empty();
-                        var data = res.rows
-                        $.each(data, function (i, item) {
-                            $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
-                        })
-                    }
-                })
+                if (search_name.length != 0 || search_city.length != 0 || search_type.length != 0) {
+
+                    var curpageIndex = 1;
+
+                    getHospitalData(search_name, search_city, search_type, '#hospitalList', curpageIndex);
+
+                    curpageindex = 1;
+
+                } else {
+
+                    var curpageIndex = 1;
+
+                    getHospitalData('', '', '', '#hospitalList', curpageIndex);
+
+                    curpageindex = 1;
+
+                }
+
             }
 
             if ($(document).height() <= totalheight) {
 
-                curpageindex++;
+                if (search_name.length != 0 || search_city.length != 0 || search_type.length != 0) {
 
-                $.ajax({
-                    methods: 'GET',
-                    url: BASE_URL + '/API/GetOrganList',
-                    data: {
-                        pagesize: 10,
-                        curpageindex: curpageindex,
-                        search: '',
-                        regionid: '',
-                        nature: ''
-                    },
-                    success: function (res) {
-                        var data = res.rows
-                        $.each(data, function (i, item) {
-                            if (item.photo.length != 0) {
-                                $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
-                            } else {
-                                $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="./images/nopic.jpg" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
-                            }
-                        })
-                        if (res.rows.length == 0) {
-                            $('<p>暂无更多数据</p>').appendTo('.datastate');
-                        }
-                    }
-                })
+                    curpageindex++;
+
+                    getHospitalData(search_name, search_city, search_type, '', curpageindex);
+
+                } else {
+
+                    curpageindex++;
+
+                    getHospitalData('', '', '', '', curpageindex);
+                }
+
             }
         })
 
@@ -200,7 +186,8 @@
         })
 
         $('.goBack').click(function () {
-            history.go(-1)
+            url = "index.html";
+            window.location.href = url;
         })
     </script>
 </body>

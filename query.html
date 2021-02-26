@@ -33,69 +33,81 @@
     </div>
 
     <script>
-        $(function(){
+        $(function () {
 
             var BASE_URL = 'https://a.ycylzx.com';
             var telNumber = 0;  //用户输入手机号码
             var yzmCode = 0;    //用户输入验证码
             var YZM = 0;        //用户得到的验证码
 
-            $('.tel').blur(function(){
+            $('.tel').blur(function () {
                 telNumber = $('input[name = "tel"]').val();
             })
 
-            $('.getYzm').click(function(){
+            //读取localStorage
+            var yzmTime = localStorage.getItem("yzmTime");
+            if (yzmTime != undefined && !isNaN(yzmTime)) {
+                var now = new Date().getTime();  //当前时间戳
+                var locksecends = parseInt((yzmTime - now) / 1000);
+                if (locksecends <= 0) {
+                    localStorage.removeItem("yzmTime", null);
+                } else {
+                    lockButton(locksecends);
+                }
+            }
+
+            $('.getYzm').click(function () {
+
                 $.ajax({
-                    methods:'GET',
-                    url:BASE_URL + '/API/SMS',
-                    data:{
-                        phone:telNumber
+                    methods: 'GET',
+                    url: BASE_URL + '/API/SMS',
+                    data: {
+                        phone: telNumber
                     },
-                    success:function(res){
-                        if(res.Success == true){
+                    success: function (res) {
+                        if (res.Success == true) {
+
                             YZM = res.zym;
-                            var times = 60;
-                            $('.getYzm').empty();
-                            countDown = setInterval(() => {
-                                times--;
-                                $('.getYzm').empty();
-                                $('<span>重新发送'+ times +'s</span>').appendTo('.getYzm');                  
-                                if(times<=0){
-                                    $('.getYzm').empty();
-                                    clearInterval(countDown);
-                                    $('<span>获取验证码</span>').appendTo('.getYzm');
-                                }
-                            }, 1000);                  
-                        }else{
+                            var seconds = 300;
+                            lockButton(seconds);
+
+                        } else if (res.zym == -2) {
+                            $('.tips').empty();
+                            $('<span>该号码无会诊信息</span>').appendTo('.tips');
+                            $('.tips').css('display', 'block');
+                            setTimeout(function () {
+                                $('.tips').css('display', 'none');
+                            }, 2000);
+                        } else {
                             $('.tips').empty();
                             $('<span>验证码发送失败</span>').appendTo('.tips');
-                            $('.tips').css('display','block');
-                            setTimeout(function(){
-                                $('.tips').css('display','none');
-                            },2000)
+                            $('.tips').css('display', 'block');
+                            setTimeout(function () {
+                                $('.tips').css('display', 'none');
+                            }, 2000);
                         }
                     }
                 })
             })
 
-            $('.code').blur(function(){
+            $('.code').blur(function () {
                 yzmCode = $('input[name = "code"]').val();
             })
 
-            $('.search').click(function(){
-                if(yzmCode == YZM){
+            $('.search').click(function () {
+                if (yzmCode == YZM) {
                     var phone = telNumber;
                     url = "queryList.html?phone=" + phone;
                     window.location.href = url;
                     $('.tel').val(''),
-                    $('.code').val('')
-                }else{
+                        $('.code').val('')
+                } else {
                     $('.tips').empty();
                     $('<span>验证码错误</span>').appendTo('.tips');
-                    $('.tips').css('display','block');
-                    setTimeout(function(){
-                        $('.tips').css('display','none');
-                    },2000)
+                    $('.tips').css('display', 'block');
+                    setTimeout(function () {
+                        $('.tips').css('display', 'none');
+                    }, 2000)
                 }
             })
 
@@ -103,6 +115,33 @@
                 history.go(-1)
             })
         })
+        var lockButton = function (seconds) {
+
+            var yzmTime = localStorage.getItem('yzmTime');
+            if (yzmTime == null || yzmTime == undefined || yzmTime == 'undefiend' || yzmTime == 'null') {
+                var now = new Date().getTime(); //当前时间戳
+                var endTime = seconds * 1000 + now; //结束时间戳
+                localStorage.setItem("yzmTime", endTime); //将结束时间保存到cookie
+            }
+
+            $('.getYzm').empty();
+            $('<span>重新发送' + seconds + 's</span>').appendTo('.getYzm');
+
+            var countDown = setInterval(function () {
+
+                seconds--;
+                $('.getYzm').empty();
+                $('<span>重新发送' + seconds + 's</span>').appendTo('.getYzm');
+
+                if (seconds <= 0) {
+                    localStorage.removeItem("yzmTime", null);
+                    $('.getYzm').empty();
+                    $('<span>获取验证码</span>').appendTo('.getYzm');
+                    clearInterval(countDown);
+                }
+            }, 1000);
+        }
+
     </script>
 </body>
 

@@ -2,24 +2,101 @@ $(function () {
 
     var BASE_URL = 'https://a.ycylzx.com'
 
+    //省份枚举
+    function getProvinceData() {
+        var data = [
+            { id: 1, name: '内蒙古' },
+            { id: 2, name: '北京' },
+            { id: 3, name: '天津' },
+            { id: 4, name: '上海' },
+            { id: 5, name: '重庆' },
+            { id: 6, name: '河北' },
+            { id: 7, name: '河南' },
+            { id: 8, name: '云南' },
+            { id: 9, name: '辽宁' },
+            { id: 10, name: '黑龙江' },
+            { id: 11, name: '湖南' },
+            { id: 12, name: '安徽' },
+            { id: 13, name: '山东' },
+            { id: 14, name: '新疆' },
+            { id: 15, name: '江苏' },
+            { id: 16, name: '浙江' },
+            { id: 17, name: '江西' },
+            { id: 18, name: '湖北' },
+            { id: 19, name: '广西' },
+            { id: 20, name: '甘肃' },
+            { id: 21, name: '山西' },
+            { id: 22, name: '陕西' },
+            { id: 23, name: '吉林' },
+            { id: 24, name: '福建' },
+            { id: 25, name: '贵州' },
+            { id: 26, name: '广东' },
+            { id: 27, name: '青海' },
+            { id: 28, name: '西藏' },
+            { id: 29, name: '四川' },
+            { id: 30, name: '宁夏' },
+            { id: 31, name: '海南' },
+            { id: 42, name: '台湾' },
+            { id: 33, name: '香港' },
+            { id: 34, name: '澳门' }
+        ];
+        $.each(data, function (i, item) {
+            $('<li value=' + item.name + '>' + item.name + '</li>').appendTo('#position ul');
+        })
+    }
+    getProvinceData();
+
+    //医院类型枚举
+    function hospitalType() {
+        var data = [
+            { id: 1, name: '综合医院' },
+            { id: 2, name: '专科医院' }
+        ];
+        $.each(data, function (i, item) {
+            $('<li value=' + item.name + '>' + item.name + '</li>').appendTo('#type ul');
+        })
+    }
+    hospitalType()
 
     //获取医院列表
-    getHospitalData = function () {
+    getHospitalData = function (search, city, type, divId, curpageIndex) {
+        $('.datastate').empty();
         $.ajax({
             methods: 'GET',
             url: BASE_URL + '/API/GetOrganList',
             data: {
                 pagesize: 10,
-                curpageindex: 1,
-                search: '',
-                regionid: '',
-                nature: ''
+                curpageindex: curpageIndex,
+                search: search,
+                regionid: city,
+                nature: type
             },
             success: function (res) {
-                var data = res.rows
-                $.each(data, function (i, item) {
-                    $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
-                })
+
+                $(divId).empty();
+                $('#position').slideUp(300);
+                $('#type').slideUp(300);
+                $('.cover').slideUp(0);
+                $('.cover1').slideUp(0);
+
+                var data = res.rows;
+
+                if (res.Success == false) {
+
+                    $('<p>未找到对应的医院</p>').appendTo('.datastate');
+
+                } else {
+                    $.each(data, function (i, item) {
+                        if (item.photo.length != 0) {
+                            $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="' + item.photo + '" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
+                        } else {
+                            $('<li id=' + item.id + '><div class="hopistal_item"><div class="item_l"><img src="./images/nopic.jpg" alt=""></div><div class="item_r"><p class="name line1">' + item.OrganName + '</p><p class="addr line1">' + item.addr + '</p><div class="label"><div class="label_item">' + item.Grade1Name + item.Grade2Name + '</div><div class="label_item">' + item.NatureName + '</div></div></div></div></li>').appendTo('#hospitalList');
+                        }
+                    })
+                    if (res.rows.length == 0) {
+                        $('<p>暂无更多数据</p>').appendTo('.datastate');
+                    }
+                }
             }
         })
     }
@@ -33,8 +110,12 @@ $(function () {
                 id: id
             },
             success: function (res) {
-                $('<span>' + res.OrganName + '</span>').appendTo('.title')
-                $('<img src="' + res.photo + '" alt="" />').appendTo('.pic');
+                $('<span>' + res.OrganName + '</span>').appendTo('.title');
+                if (res.photo.length != 0) {
+                    $('<img src="' + res.photo + '" alt="" />').appendTo('.pic');
+                } else {
+                    $('<img src="./images/nopic.jpg" alt="">').appendTo('.pic');
+                }
                 $('<div>医院等级:<span>' + res.Grade1Name + res.Grade2Name + '</span></div><div>医院类型:<span>' + res.NatureName + '</span></div><div>分类管理类型:<span>' + res.NatureName + '</span></div><div>机构电话:<span>' + res.tel + '</span></div><div>隶属关系:<span>' + res.OrdinationName + '</span></div><div>所属区域:<span>' + res.RegionName + '</span></div><div class="addr">医院地址:<span>' + res.addr + '</span></div>').appendTo('.info_content')
                 var department = res.Department;
                 $.each(department, function (i, item) {
@@ -46,17 +127,21 @@ $(function () {
         })
     }
     //获取医师列表
-    getDoctorList = function (id) {
+    getDoctorList = function (id, search, slide, divId, curpageindex) {
+        $('.datastate').empty();
         $.ajax({
             methods: 'GET',
             url: BASE_URL + '/API/GetPersonList',
             data: {
                 pagesize: 10,
-                curpageindex: 1,
+                curpageindex: curpageindex,
                 Organsid: id,
-                search: ''
+                search: search
             },
             success: function (res) {
+                // console.log(res)
+                $(divId).empty();
+                $(slide).slideUp(300);
                 var data = res.rows;
                 if (res.Success == true) {
                     $.each(data, function (i, item) {
@@ -66,10 +151,12 @@ $(function () {
                         } else {
                             $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="./images/nodoctor.jpg" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
                         }
-
                     })
+                    if (res.rows.length == 0) {
+                        $('<p>暂无更多数据</p>').appendTo('.datastate');
+                    }
                 } else {
-                    $('<span class="nodata">该科室暂无医师数据</span>').appendTo('#doctorList');
+                    $('<span class="nodata">暂无医师数据</span>').appendTo('#doctorList');
                 }
             }
         })
@@ -157,7 +244,11 @@ $(function () {
                 id: id
             },
             success: function (res) {
-                $('<img src="' + res.photoFile + '" alt="" />').appendTo('.avatar');
+                if (res.photoFile.length != 0) {
+                    $('<img src="' + res.photoFile + '" alt="" />').appendTo('.avatar');
+                } else {
+                    $('<img src="./images/nodoctor2.jpg" alt="" />').appendTo('.avatar');
+                }
                 $('<div class="name">' + res.Name + '<span>' + res.SexId + '</span><span>' + res.NationId + '</span></div><div class="title">' + res.ScholarId + '<span>' + res.qualificationId + '</span></div><div>职务：' + res.dutyId + '</div>').appendTo('.desc');
                 let professional = decodeURIComponent(res.professionalSkill);
                 let dutyDescribe = decodeURIComponent(res.dutyDescribe);

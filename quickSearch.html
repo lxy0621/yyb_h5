@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/quickSearch.css">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/getData.js"></script>
+    <script src="./js/flexible.js"></script>
+    <title>云医宝预约会诊</title>
+</head>
+
+<body>
+    <header>
+        <div class="operation goBack">
+            <img src="./images/back.png" alt="">
+        </div>
+        <div class="title changeTab">选择医院</div>
+        <div class="title">选择医生</div>
+    </header>
+
+    <div id="container">
+        <div id="search">
+            <input class="doctor" type="text" name="doctor" placeholder="请输入医生 姓名/科室/医院">
+            <div class="btnSet">
+                <button id="reset">
+                    <img src="./images/reset.png" alt="">
+                </button>
+                <button id="searchBtn">
+                    <img src="./images/find.png" alt="">
+                </button>
+            </div>
+        </div>
+        <ul id="doctorList"></ul>
+        <div class="datastate"></div>
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            getDoctorList('', '', '', '', curpageindex);
+        })
+
+        var totalheight = 0;
+        var curpageindex = 1;
+        var search_doctor = '';
+
+        $('.doctor').blur(function () {
+            search_doctor = $('input[name = "doctor"]').val();
+        })
+
+        $('.changeTab').click(function () {
+            url = "hospitalList.html";
+            window.location.href = url;
+        })
+
+        $(window).scroll(function (e) {
+
+            e.preventDefault();
+
+            totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
+
+            if ($(document).scrollTop() <= 0) {
+
+                if (search_doctor.length != 0) {
+
+                    var curpageIndex = 1;
+
+                    getDoctorList('', search_doctor, '', '#doctorList', curpageIndex);
+
+                    curpageindex = 1;
+
+                } else {
+
+                    var curpageIndex = 1;
+
+                    getDoctorList('', '', '', '#doctorList', curpageIndex);
+
+                    curpageindex = 1;
+
+                }
+            }
+
+            if ($(document).height() <= totalheight) {
+
+                if (search_doctor.length != 0) {
+
+                    curpageindex++;
+
+                    getDoctorList('', search_doctor, '', '', curpageindex);
+
+                } else {
+
+                    curpageindex++;
+
+                    getDoctorList('', '', '', '', curpageindex);
+
+                }
+
+            }
+
+        })
+
+        $('#searchBtn').click(function () {
+
+            getDoctorList('', search_doctor, '', '#doctorList', curpageindex);
+
+        })
+
+        $('#reset').click(function () {
+
+            search_doctor = '';
+            $('.doctor').val('');
+
+            getDoctorList('', search_doctor, '', '#doctorList', curpageindex);
+
+        })
+
+        $('#doctorList').on('click', 'li', function (e) {
+            var id = e.currentTarget.id;
+            url = "doctorDetail.html?id=" + id;
+            window.location.href = url;
+        })
+
+        $('.goBack').click(function () {
+            url = "index.html";
+            window.location.href = url;
+        })
+    </script>
+</body>
+
+</html>

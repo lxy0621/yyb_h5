@@ -160,6 +160,17 @@
             });
             //swiper end
 
+            //读取localStorage
+            var orderTime = localStorage.getItem("orderTime");
+            if (orderTime != undefined && !isNaN(orderTime)) {
+                var now = new Date().getTime();  //当前时间戳
+                var locksecends = parseInt((orderTime - now) / 1000);
+                if (locksecends <= 0) {
+                    localStorage.removeItem("orderTime", null);
+                } else {
+                    lockButton(locksecends);
+                }
+            }
 
             //接收ID
             function GetRequest() {
@@ -220,13 +231,17 @@
             $('.code').blur(function () {
                 var CODING = $('input[name = "code"]').val();
                 if (CODE == CODING) {
-                    $('.tips').empty();
-                    $('<span>验证码核验成功</span>').appendTo('.tips');
-                    $('.tips').css('display', 'block');
-                    setTimeout(function () {
-                        $('.tips').css('display', 'none');
-                    }, 2000);
-                    realTEL = TEL;
+                    if (CODE.length != 0) {
+                        $('.tips').empty();
+                        $('<span>验证码核验成功</span>').appendTo('.tips');
+                        $('.tips').css('display', 'block');
+                        setTimeout(function () {
+                            $('.tips').css('display', 'none');
+                        }, 2000);
+                        realTEL = TEL;
+                    }else{
+                        return;
+                    }
                 } else {
                     $('.tips').empty();
                     $('<span>验证码输入错误</span>').appendTo('.tips');
@@ -245,19 +260,11 @@
                     },
                     success: function (res) {
                         if (res.Success == true) {
+
                             CODE = res.zym;
-                            var times = 60;
-                            $('.codeBtn').empty();
-                            countDown = setInterval(() => {
-                                times--;
-                                $('.codeBtn').empty();
-                                $('<span>重新发送' + times + 's</span>').appendTo('.codeBtn');
-                                if (times <= 0) {
-                                    $('.codeBtn').empty();
-                                    clearInterval(countDown);
-                                    $('<span>获取验证码</span>').appendTo('.codeBtn');
-                                }
-                            }, 1000);
+                            var seconds = 300;
+                            lockButton(seconds);
+
                         } else {
                             $('.tips').empty();
                             $('<span>验证码发送失败</span>').appendTo('.tips');
@@ -373,6 +380,31 @@
                 history.go(-1)
             })
         })
+
+        var lockButton = function (seconds) {
+
+            var orderTime = localStorage.getItem('orderTime');
+            if (orderTime == null || orderTime == undefined || orderTime == 'undefiend' || orderTime == 'null') {
+                var now = new Date().getTime(); //当前时间戳
+                var endTime = seconds * 1000 + now; //结束时间戳
+                localStorage.setItem("orderTime", endTime); //将结束时间保存到cookie
+            }
+            $('.codeBtn').empty();
+            $('<span>重新发送' + seconds + 's</span>').appendTo('.codeBtn');
+
+            var countDown = setInterval(function () {
+                seconds--;
+                $('.codeBtn').empty();
+                $('<span>重新发送' + seconds + 's</span>').appendTo('.codeBtn');
+
+                if (seconds <= 0) {
+                    localStorage.removeItem("orderTime", null);
+                    $('.codeBtn').empty();
+                    $('<span>获取验证码</span>').appendTo('.codeBtn');
+                    clearInterval(countDown);
+                }
+            }, 1000);
+        }
     </script>
 </body>
 

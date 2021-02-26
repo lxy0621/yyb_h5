@@ -23,7 +23,10 @@
     </header>
     <div id="search">
         <input class="name" type="text" name="name" placeholder="请输入医生姓名">
-        <button id="searchBtn">搜索</button>
+        <div class="btnSet">
+            <button id="reset">重置</button>
+            <button id="searchBtn">搜索</button>
+        </div>
     </div>
     <div class="container">
         <ul id="doctorList"></ul>
@@ -71,7 +74,7 @@
                     Organsid: id,
                     search: String(search_name)
                 },
-                success: function (res) {   
+                success: function (res) {
                     $("#doctorList").empty();
                     $('#search').slideUp(300);
                     var data = res.rows;
@@ -92,73 +95,66 @@
             })
         })
 
-        $(window).scroll(function () {
+
+        $('#reset').click(function () {
+
+            search_name = '';
+            $('.name').val('');
+
+            getDoctorList(id, search_name, '#search', '#doctorList', curpageindex);
+
+        })
+
+        $(window).scroll(function (e) {
+
+            e.preventDefault();
 
             totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
 
 
             if ($(document).scrollTop() <= 0) {
 
-                $.ajax({
-                    methods: 'GET',
-                    url: BASE_URL + '/API/GetPersonList',
-                    data: {
-                        pagesize: 10,
-                        curpageindex: 1,
-                        Organsid: id,
-                        search: ''
-                    },
-                    success: function (res) {
-                        $("#doctorList").empty();
-                        var data = res.rows;
-                        $.each(data, function (i, item) {
-                            var avatar = data[i].photoFile;
-                            if (avatar != '') {
-                                $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="' + avatar + '" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
-                            } else {
-                                $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="./images/nodoctor.jpg" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
-                            }
+                if (search_name.length != 0) {
 
-                        })
-                    }
-                })
+                    var curpageIndex = 1;
+
+                    getDoctorList(id, search_name, '', '#doctorList', curpageIndex);
+
+                    curpageindex = 1;
+
+                } else {
+
+                    var curpageIndex = 1;
+
+                    getDoctorList(id, '', '', '#doctorList', curpageIndex);
+
+                    curpageindex = 1;
+
+                }
 
             }
 
             if ($(document).height() <= totalheight) {
 
-                curpageindex++;
+                if (search_name.length != 0) {
 
-                $.ajax({
-                    methods: 'GET',
-                    url: BASE_URL + '/API/GetPersonList',
-                    data: {
-                        pagesize: 10,
-                        curpageindex: curpageindex,
-                        Organsid: id,
-                        search: ''
-                    },
-                    success: function (res) {
-                        var data = res.rows;
-                        $.each(data, function (i, item) {
-                            var avatar = data[i].photoFile;
-                            if (avatar != '') {
-                                $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="' + avatar + '" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
-                            } else {
-                                $('<li id="' + item.id + '" class="doctor_item"><div class="item_l"><img src="./images/nodoctor.jpg" alt="" /></div><div class="item_r"><div class="itemr_t">' + item.name + '<span>' + item.qualificationId + '<span></div><div class="itemr_m">' + item.SexId + '<span>' + item.NationId + '</span></div><div class="itemr_b line1">' + item.hospital + '</div></div></li>').appendTo('#doctorList');
-                            }
-                        })
-                        if (res.rows.length == 0) {
-                            $('<p>暂无更多数据</p>').appendTo('.datastate');
-                        }
-                    }
-                })
+                    curpageindex++;
+
+                    getDoctorList(id, search_name, '', '', curpageindex);
+
+                } else {
+
+                    curpageindex++;
+
+                    getDoctorList(id, '', '', '', curpageindex);
+
+                }
             }
 
         })
 
         $(document).ready(function () {
-            getDoctorList(id);
+            getDoctorList(id, search_name, '#search', '#doctorList', curpageindex);
         });
 
 

@@ -67,13 +67,26 @@ header {
             height: .65625rem;
         }
     }
-}
 
+    .senior {
+        height: 1.375rem;
+        width: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            display: block;
+            width: .65625rem;
+            height: .65625rem;
+        }
+    }
+}
 
 
 #container {
 
-    padding: 3.4rem 0 0 0;
+    padding: 2.6rem 0 0 0;
 
     #search {
         position: fixed;
@@ -87,7 +100,8 @@ header {
         align-items: center;
         padding: 0 .2rem;
         box-sizing: border-box;
-        .name {
+
+        .doctor {
             outline: none;
             border: none;
             width: 100%;
@@ -143,186 +157,89 @@ header {
         }
     }
 
-    #dropDown {
-        position: fixed;
-        top: 2.54rem;
-        width: 100%;
-        background: #82e4f5;
-        height: 1rem;
-        border-top: 1px solid #ffffff;
-        display: flex;
-
-        .hos_position {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #ffffff;
-            font-size: .375rem;
-            border-right: 1px solid #ffffff;
-            box-sizing: border-box;
-
-            img {
-                display: inline-block;
-                width: .46875rem;
-                height: .46875rem;
-            }
-        }
-
-        .hos_type {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #ffffff;
-            font-size: .375rem;
-
-            img {
-                display: inline-block;
-                width: .46875rem;
-                height: .46875rem;
-            }
-        }
-    }
-
-    #hospitalList {
+    #doctorList {
         margin: .15625rem 0;
         padding: 0 .15625rem;
         box-sizing: border-box;
         list-style: none;
-        z-index: 5;
 
-        .hopistal_item {
+        .nodata {
+            display: block;
+            width: 100%;
+            color: #888888;
+            font-size: .4375rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: .3125rem;
+        }
+
+        .doctor_item {
             background-color: #ffffff;
             border-radius: .15625rem;
             margin-bottom: .15625rem;
             overflow: hidden;
             display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: .15625rem;
+            box-sizing: border-box;
 
             .item_l {
+                overflow: hidden;
+                width: 2.4rem;
+                height: 2.4rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
                 img {
                     display: block;
-                    width: 3.75rem;
-                    height: 2.8125rem;
+                    width: 2.4rem;
+                    height: 2.4rem;
+                    border-radius: 1.40625rem;
                 }
             }
 
             .item_r {
+                flex: 3;
+                padding: .3125rem;
+                box-sizing: border-box;
                 display: flex;
+                flex-direction: column;
                 justify-content: space-around;
                 align-items: flex-start;
-                flex-direction: column;
-                padding: .15625rem;
-                box-sizing: border-box;
+                font-size: .4375rem;
 
-                .name {
-                    font-size: .4375rem;
-                    font-weight: 500;
+                .itemr_t span {
+                    font-size: .375rem;
+                    color: #888888;
+                    margin-left: .5rem;
                 }
 
-                .addr {
+                .itemr_m {
+                    font-size: .375rem;
+                    color: #888888;
+                    margin: .15625rem 0;
+
+                    span {
+                        margin-left: .5rem;
+                    }
+                }
+
+                .itemr_b {
                     font-size: .375rem;
                     color: #888888;
                 }
 
-                .label {
-                    width: 100%;
-                    display: flex;
-
-                    .label_item:nth-child(1) {
-                        margin-right: .3125rem;
-                    }
-
-                    .label_item {
-                        width: 1.875rem;
-                        height: .75rem;
-                        background: #fcd663;
-                        border-radius: .375rem;
-                        font-size: .25rem;
-                        color: #ffffff;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
+                .line1 {
+                    display: -webkit-box;
+                    overflow: hidden;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
                 }
             }
         }
-    }
-
-    #position {
-        position: fixed;
-        top: 3.59375rem;
-        left: 0;
-        width: 100%;
-        height: 10rem;
-        background: #ffffff;
-        z-index: 10;
-        display: none;
-        overflow: scroll;
-
-        ul {
-            padding: .15625rem .5rem;
-            box-sizing: border-box;
-
-            li {
-                list-style: none;
-                padding: .32rem 0;
-                width: 100%;
-                text-align: center;
-                font-size: .375rem;
-                border-bottom: 1px solid #ccc;
-            }
-        }
-    }
-
-    #type {
-        position: fixed;
-        top: 3.59375rem;
-        left: 0;
-        width: 100%;
-        height: 5rem;
-        background: #ffffff;
-        z-index: 10;
-        display: none;
-        overflow: scroll;
-
-        ul {
-            padding: .15625rem .5rem;
-            box-sizing: border-box;
-
-            li {
-                list-style: none;
-                padding: .32rem 0;
-                width: 100%;
-                text-align: center;
-                font-size: .375rem;
-                border-bottom: 1px solid #ccc;
-            }
-        }
-    }
-
-    .cover {
-        position: fixed;
-        z-index: 9;
-        top: 3.59375rem;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, .8);
-        overflow: auto;
-        display: none;
-    }
-
-    .cover1 {
-        position: fixed;
-        z-index: 9;
-        top: 3.59375rem;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, .8);
-        overflow: auto;
-        display: none;
     }
 
     .datastate {
@@ -335,13 +252,5 @@ header {
         margin: .3125rem 0;
         color: #888888;
     }
-}
 
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1.53125rem;
-    background: #53cbe0;
 }

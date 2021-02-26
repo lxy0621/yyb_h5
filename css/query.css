@@ -112,6 +112,7 @@ header .operation img {
   align-items: center;
   background: #53cbe0;
   color: #ffffff;
+  cursor: pointer;
 }
 .container .content .search {
   width: 6.5625rem;
